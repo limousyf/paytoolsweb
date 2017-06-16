@@ -1,0 +1,124 @@
+<html>
+<head>
+<link rel='stylesheet' id='twentyseventeen-fonts-css' href='https://fonts.googleapis.com/css?family=Libre+Franklin%3A300%2C300i%2C400%2C400i%2C600%2C600i%2C800%2C800i&#038;subset=latin%2Clatin-ext' type='text/css' media='all'/>
+<link rel='stylesheet' id='twentyseventeen-style-css' href='style.css' type='text/css' media='all'/>
+<link rel='stylesheet' id='tab-css' href='tab.css' type='text/css' media='all'/>
+<script src="./decoding.js"></script>
+<script src="./tab.js"></script>
+<script type="text/javascript">
+function UserAction() {
+	var value_to_decode = document.forms["input_details"]["value_to_decode"].value;
+	var field_to_decode = document.getElementById("field_to_decode").value;
+    var req_url= buildURL(field_to_decode,value_to_decode)
+    var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+	  if (this.status == 500) {
+		var response = JSON.parse(this.responseText);
+		var errorMessage = "<p class=\"error\">" + response.errorMessage + "</p>"
+		document.getElementById("decoded").innerHTML = errorMessage;
+	  }
+	  else if (this.status == 400) {
+		var response = JSON.parse(this.responseText);
+		var errorMessage = "<p class=\"error\">" + response.errorMessage + "</p>"
+		document.getElementById("decoded").innerHTML = errorMessage;
+	  }
+	  else if (this.status == 200) {
+		var response = JSON.parse(this.responseText);
+		
+		var parsedResponse
+		
+		//specific processing
+		if(field_to_decode == 'arc'){
+			parsedResponse = translateSingleValue("ARC",response)
+		}
+		else if (field_to_decode == 'cid'){
+			parsedResponse = translateCID(response)
+		}
+		else if (field_to_decode == 'cvm'){
+			parsedResponse = translateCVM(response)
+		}
+		else if (field_to_decode == 'cvr'){
+			parsedResponse = translateCVR(response)
+		}
+		else if (field_to_decode == 'dol'){
+			parsedResponse = decodeDOL(response)
+		}
+		else if (field_to_decode == 'termtype'){
+			parsedResponse = decodeTerminalType(response)
+		}
+		else{ //bitfield
+			parsedResponse = translateByteList(response)
+		}
+		document.getElementById("decoded").innerHTML = parsedResponse;
+	  }
+  };
+    xhttp.open("GET", req_url, false);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+}
+
+function buildURL(field, parameter){
+	var host = "api.paytools.info";
+	var stage = "latest";
+	var version = "v1";
+	var returnURL = "https://" + host + "/" + stage + "/" + version + "/" + field + "?" + field + "=" + parameter
+	return returnURL
+}
+</script>
+<style>
+.error {
+        color: rgb(255,0,0);
+		font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'Tags')" id="defaultOpen">Tags</button>
+  <button class="tablinks" onclick="openCity(event, 'Search')">Search</button>
+  <button class="tablinks" onclick="openCity(event, 'Utils')">Other utilities</button>
+</div>
+
+<div id="Tags" class="tabcontent">
+  <h3>EMV Tags decoding</h3>
+<form name="input_details">
+<select id="field_to_decode" form="input_details">
+  <option value="ada">Application Default Action (ADA - 9f52)</option>
+  <option value="aip">Application Interchange Profile (AIP - 82)</option>
+  <option value="arc">Authorization Response Code (ARC - 8A)</option>  
+  <option value="auc">Application Usage Control (AUC - 9f07)</option>
+  <option value="cid">Cryptogram Information Data (CID - 9f27)</option>
+  <option value="csu">Card Status Update (CSU)</option>  
+  <option value="ctq">Card Transaction Qualifiers (CTQ - 9f6c)</option>
+  <option value="cvm">CVM Results (9f34)</option>
+  <option value="cvr">Card Verification Results (CVR)</option>
+  <option value="dol">Data Object List (DOL)</option>
+  <option value="termcap">Terminal Capabilities</option>
+  <option value="termtype">Terminal Type</option>
+  <option value="tsi">Transaction Status Information (TSI - 9B)</option>
+  <option value="ttq">Terminal Transaction Qualifiers (TTQ - 9f66)</option>
+  <option value="tvr">Transaction Verification Results (TVR - 95)</option>
+</select>
+<input id="value_to_decode" name="value_input" type="text" />
+<button type="button" onclick="UserAction()">Decode</button></form>
+<p id="decoded"></p>
+</div>
+
+<div id="Search" class="tabcontent">
+  <h3>Search</h3>
+
+</div>
+
+<div id="Utils" class="tabcontent">
+  <h3>Other utilities</h3>
+
+</div>
+
+
+</body>
+  <script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+</html>
