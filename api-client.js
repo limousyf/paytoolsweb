@@ -90,10 +90,75 @@ function searchAction() {
     xhttp.send();
 }
 
+function mod10Action() {
+	var mod10_value = document.forms["utils_details"]["mod10_input"].value;
+	var mod10_mode = document.getElementById("mod10_mode").value;
+    
+	var req_url
+	var checkDigit
+	if(mod10_mode == "mod10compute"){
+		req_url = buildmod10URL(mod10_mode,mod10_value)
+	}
+	else{
+	//mod10_check
+		//parse checkdigit (get last digit of mod10_value
+		var trim_value = mod10_value.substring(0, mod10_value.length - 1);
+		checkDigit = mod10_value.slice(-1);
+		req_url = buildmod10URL(mod10_mode,trim_value, checkDigit)
+	}    
+	var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+	  if ((this.status == 500) || (this.status == 400)){
+		var response = JSON.parse(this.responseText);
+		var errorMessage = "<p class=\"error\">" + response.errorMessage + "</p>"
+		document.getElementById("utilsResp").innerHTML = errorMessage;
+	  }
+	  else if (this.status == 200) {
+		var response = JSON.parse(this.responseText);
+		
+		console.log("response: " + response)
+		
+		var parsedResponse
+		
+		if(response){
+			//specific processing
+			if(mod10_mode == 'mod10compute'){
+				parsedResponse = "Mod10 check digit: <b>" + response.checkDigit + "</b>"
+			}
+			else if (mod10_mode == 'mod10check'){
+				if(response.result){
+					parsedResponse = "Check digit <b>" + checkDigit + "</b> is valid"
+				}
+				else{
+					//wrong check digit
+					parsedResponse = "Check digit <b class=\"error\">" + checkDigit + "</b> is incorrect<br/>"
+					parsedResponse += "Expected value is <b>" + response.expectedCheckDigit + "</b>"
+				}
+			}		
+		}
+		document.getElementById("utilsResp").innerHTML = parsedResponse;
+	  }
+  };
+    xhttp.open("GET", req_url, false);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+}
+
 function buildURL(field, parameter){
 	var host = "api.paytools.info";
 	var stage = "latest";
 	var version = "v1";
 	var returnURL = "https://" + host + "/" + stage + "/" + version + "/" + field + "?" + field + "=" + parameter
+	return returnURL
+}
+
+function buildmod10URL(mod10_mode, value, checkDigit){
+	var host = "api.paytools.info";
+	var stage = "latest";
+	var version = "v1";
+	var returnURL = "https://" + host + "/" + stage + "/" + version + "/" + mod10_mode + "?numvalue=" + value
+	if(checkDigit){
+		returnURL += "&checkdigit=" + checkDigit
+	}
 	return returnURL
 }

@@ -62,7 +62,14 @@
 
 <div id="Utils" class="tabcontent">
   <h3>Other utilities</h3>
-
+  <form name="utils_details">
+<select id="mod10_mode" form="utils_details">
+  <option value="mod10compute">Calculate mod10 check value</option>
+  <option value="mod10check">Verify mod10 check value</option>
+</select>
+<input id="value_mod10" name="mod10_input" type="text" />
+<button type="button" onclick="mod10Action()">Send</button></form>
+<p id="utilsResp"></p>
 </div>
 
 
