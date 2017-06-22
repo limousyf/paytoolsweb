@@ -25,6 +25,31 @@ function processAIDList(aidListObject){
 }
 
 /**
+ * Takes in input a JSON object formatted as a list of Tags
+ * and translate the content as human readable
+ * 
+ */
+function processTagList(tagListObject){
+    var interpretedTagList = ""
+    console.log("Translating " + tagListObject)
+    if(tagListObject){
+		
+		//creating table
+		interpretedTagList += "<table style=\"width:100%\"><tr><th>Tag</th><th>Name</th><th>Description</th></tr>"
+		
+        for(var i=0;i<tagListObject.length;i++){
+			interpretedTagList += "<tr>"
+			interpretedTagList += "<td>" + tagListObject[i].tag + "</td><td>" + tagListObject[i].name + "</td><td>" + tagListObject[i].description + "</td>"
+			interpretedTagList += "</tr>"
+        }
+		
+		interpretedTagList += "</table>"
+    }
+
+    return interpretedTagList
+}
+
+/**
  * Takes in input a JSON object formatted as a list of IIN
  * and translate the content as human readable
  * 

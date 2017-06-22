@@ -75,6 +75,9 @@ function searchAction() {
 			else if (field_to_search == 'iin'){
 				parsedResponse = processIINList(response)
 			}
+			else if (field_to_search == 'tag'){
+				parsedResponse = processTagList(response)
+			}			
 		}
 		else{
 			parsedResponse = "No matches found"
