@@ -56,6 +56,8 @@
   <option value="tag">EMV Tags</option>
 </select>
 <input id="value_to_search" name="search_input" type="text" />
+  <input type="radio" id="search_mode_exact" name="search_mode" value="exact" checked> Exact search </input>
+  <input type="radio" id="search_mode_fuzzy" name="search_mode" value="partial"> Fuzzy search</input><br>
 <button type="button" onclick="searchAction()">Search</button></form>
 <p id="matches"></p>
 </div>

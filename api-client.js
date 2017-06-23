@@ -53,8 +53,18 @@ function searchAction() {
 	//console.log("Search action")
 	var value_to_search = document.forms["search_details"]["value_to_search"].value;
 	var field_to_search = document.getElementById("field_to_search").value;
-    var req_url= buildURL(field_to_search,value_to_search)
-    var xhttp = new XMLHttpRequest();
+    
+	var req_url
+	
+	if (document.getElementById('search_mode_exact').checked) {
+		req_url= buildSearchURL(field_to_search,value_to_search,true)
+	}
+	else{
+		req_url= buildSearchURL(field_to_search,value_to_search)
+	}
+
+    
+	var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
 	  if ((this.status == 500) || (this.status == 400)){
 		var response = JSON.parse(this.responseText);
@@ -149,6 +159,17 @@ function buildURL(field, parameter){
 	var stage = "latest";
 	var version = "v1";
 	var returnURL = "https://" + host + "/" + stage + "/" + version + "/" + field + "?" + field + "=" + parameter
+	return returnURL
+}
+
+function buildSearchURL(field, parameter, partial){
+	var host = "api.paytools.info";
+	var stage = "latest";
+	var version = "v1";
+	var returnURL = "https://" + host + "/" + stage + "/" + version + "/" + field + "?" + field + "=" + parameter
+	if(partial){
+		returnURL += "&exact=true"
+	}
 	return returnURL
 }
 
