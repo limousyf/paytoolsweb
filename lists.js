@@ -35,11 +35,11 @@ function processTagList(tagListObject){
     if(tagListObject){
 		
 		//creating table
-		interpretedTagList += "<table style=\"width:100%\"><tr><th>Tag</th><th>Name</th><th>Description</th></tr>"
+		interpretedTagList += "<table style=\"width:100%\"><tr><th>Tag</th><th>Name</th><th>Description</th><th>Source</th><th>Format</th><th>Length</th></tr>"
 		
         for(var i=0;i<tagListObject.length;i++){
 			interpretedTagList += "<tr>"
-			interpretedTagList += "<td>" + tagListObject[i].tag + "</td><td>" + tagListObject[i].name + "</td><td>" + tagListObject[i].description + "</td>"
+			interpretedTagList += "<td>" + tagListObject[i].tag + "</td><td>" + tagListObject[i].name + "</td><td>" + tagListObject[i].description + "</td><td>" + tagListObject[i].source + "</td><td>" + tagListObject[i].format + "</td><td>" + tagListObject[i].length + "</td>"
 			interpretedTagList += "</tr>"
         }
 		

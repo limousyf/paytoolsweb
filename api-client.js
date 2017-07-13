@@ -63,6 +63,7 @@ function searchAction() {
 		req_url= buildSearchURL(field_to_search,value_to_search)
 	}
 
+	//console.log("call: " + req_url)
     
 	var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -76,6 +77,8 @@ function searchAction() {
 		
 		var parsedResponse
 		
+		//console.log("response: " + parsedResponse)
+		
 		if((response) && (response.length >0)){
 		
 			//specific processing
@@ -85,7 +88,7 @@ function searchAction() {
 			else if (field_to_search == 'iin'){
 				parsedResponse = processIINList(response)
 			}
-			else if (field_to_search == 'tag'){
+			else if ((field_to_search == 'tag') || (field_to_search == 'tagname')) {
 				parsedResponse = processTagList(response)
 			}			
 		}
@@ -126,7 +129,7 @@ function mod10Action() {
 	  else if (this.status == 200) {
 		var response = JSON.parse(this.responseText);
 		
-		console.log("response: " + response)
+		//console.log("response: " + response)
 		
 		var parsedResponse
 		
